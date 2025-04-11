@@ -1,5 +1,6 @@
 import Link from "next/link";
 import React from "react";
+import SessionButton from "../ui/SessionButton";
 
 const Navbar = () => {
  return (
@@ -19,7 +20,7 @@ const Navbar = () => {
      </li>
     </ul>
     <ul className="w-[200px] flex justify-center">
-     <Link href="/">Sign In</Link>
+     <SessionButton />
     </ul>
    </nav>
   </header>
