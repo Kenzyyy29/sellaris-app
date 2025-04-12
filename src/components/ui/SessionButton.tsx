@@ -1,18 +1,54 @@
 "use client";
 import {signIn, signOut, useSession} from "next-auth/react";
 import {useState} from "react";
+import { CiLogout } from "react-icons/ci";
 
-export default function SessionButton() {
+interface SessionButtonProps {
+ isOpen: boolean;
+ onClose: () => void;
+}
+
+const SessionButton: React.FC<SessionButtonProps> = () => {
+ const [isOpen, setIsOpen] = useState(false);
+
+ const toggleOpen = () => {
+  setIsOpen(!isOpen);
+ };
+
  const {data: session, status}: {data: any; status: string} = useSession();
  return (
   <div>
    {status === "authenticated" ? (
     <div className="flex">
-     {session?.user?.fullname}
+     <button
+      onClick={toggleOpen}
+      className="cursor-pointer">
+      {session?.user?.fullname}
+     </button>
+     {isOpen && (
+      <div className="absolute bg-white shadow-lg mt-8 text-black w-48 right-10">
+       <ul className="rounded-[8px]">
+        <li className="px-4 py-2 hover:bg-gray-200">Item A</li>
+        <li className="px-4 py-2 hover:bg-gray-200">Item B</li>
+        <button
+         onClick={() => signOut()}
+         className="w-full flex items-center justify-between px-4 py-2 hover:bg-gray-200">
+         Sign Out
+         <CiLogout />
+        </button>
+       </ul>
+      </div>
+     )}
     </div>
    ) : (
-    <button onClick={() => signIn()}>Sign In</button>
+    <button
+     className="cursor-pointer"
+     onClick={() => signIn()}>
+     Sign In
+    </button>
    )}{" "}
   </div>
  );
-}
+};
+
+export default SessionButton;

@@ -3,11 +3,14 @@ import {signIn} from "next-auth/react";
 import Link from "next/link";
 import {useRouter} from "next/navigation";
 import {useState} from "react";
+import {FaGoogle} from "react-icons/fa";
 
-export default function SignInForm() {
+export default function SignInForm({searchParams}: {searchParams?: {callbackUrl?: string}}) {
  const {push} = useRouter();
  const [error, setError] = useState("");
  const [isLoading, setIsLoading] = useState(false);
+
+ const callbackUrl = searchParams?.callbackUrl || "/"
 
  const handleLogin = async (e: any) => {
   e.preventDefault();
@@ -19,12 +22,12 @@ export default function SignInForm() {
     email: e.target.email.value,
     password: e.target.password.value,
     redirect: false,
-    callbackUrl: "/",
+    callbackUrl,
    });
    if (!res?.error) {
     e.target.reset();
     setIsLoading(false);
-    push("/");
+    push(callbackUrl);
    } else {
     setError(res.error);
     if (res.status === 401) {
@@ -70,17 +73,30 @@ export default function SignInForm() {
     </div>
     {error && <p className="text-red-500">{error}</p>}
     <button
+     disabled={isLoading}
      type="submit"
      className="w-full bg-slate-800 p-2 rounded text-white cursor-pointer hover:bg-slate-700">
      {isLoading ? "Loading..." : "Sign In"}
     </button>
-    <div className="flex gap-2 text-[14px]">
-     <h1 className="text-white">Doesn't have an account?</h1>
-     <Link href="/sign-up">
-      <h1 className="text-blue-300 hover:underline">Create Account</h1>
-     </Link>
-    </div>
    </form>
+   <div className="flex gap-2 w-full items-center">
+    <hr className="border border-white w-full" />
+    <h1 className="text-white">or</h1>
+    <hr className="border border-white w-full" />
+   </div>
+   <button
+    type="button"
+    onClick={() => signIn("google", {callbackUrl, redirect: false})}
+    className="p-2 flex justify-center items-center gap-2 rounded text-white cursor-pointer hover:bg-slate-700 bg-slate-800 w-full">
+    <FaGoogle />
+    Sign in with Google
+   </button>
+   <div className="flex gap-2 text-[14px]">
+    <h1 className="text-white">Doesn't have an account?</h1>
+    <Link href="/sign-up">
+     <h1 className="text-blue-300 hover:underline">Create Account</h1>
+    </Link>
+   </div>
   </div>
  );
 }
