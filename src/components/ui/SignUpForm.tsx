@@ -1,13 +1,20 @@
 "use client";
+import {signIn} from "next-auth/react";
 import Link from "next/link";
 import {useRouter} from "next/navigation";
 import {useState} from "react";
 import {FaGoogle} from "react-icons/fa";
 
-export default function SignUpForm() {
+export default function SignUpForm({
+ searchParams,
+}: {
+ searchParams?: {callbackUrl?: string};
+}) {
  const {push} = useRouter();
  const [error, setError] = useState("");
  const [isLoading, setIsLoading] = useState(false);
+
+ const callbackUrl = searchParams?.callbackUrl || "/";
 
  const handleSubmit = async (e: any) => {
   e.preventDefault();
@@ -101,7 +108,9 @@ export default function SignUpForm() {
     <h1 className="text-white">or</h1>
     <hr className="border border-white w-full" />
    </div>
-   <button className="p-2 flex justify-center items-center gap-2 rounded text-white cursor-pointer hover:bg-slate-700 bg-slate-800 w-full">
+   <button
+    onClick={() => signIn("google", {callbackUrl, redirect: false})}
+    className="p-2 flex justify-center items-center gap-2 rounded text-white cursor-pointer hover:bg-slate-700 bg-slate-800 w-full">
     <FaGoogle />
     Sign in with Google
    </button>

@@ -2,6 +2,8 @@
 import React, {useState, useEffect} from "react";
 import {FaRegEdit} from "react-icons/fa";
 import {IoMdTrash} from "react-icons/io";
+import DeleteUserModal from "./DeleteUserModal";
+import UpdateUserModal from "./UpdateUserModal";
 
 interface User {
  id: string;
@@ -11,38 +13,18 @@ interface User {
  role: string;
 }
 
-const DeleteUser: React.FC<{onClose: () => void}> = ({onClose}) => {
- return (
-  <div className="fixed flex items-center justify-center w-full h-full top-0 left-0 bg-black/50">
-   <div className="bg-white w-full max-w-md p-4 h-auto rounded-[8px] flex flex-col gap-4">
-    {/* Tittle*/}
-    <h1 className="text-xl font-bold">
-     Are You Sure want to delete this user?
-    </h1>
-    <p>This actions need Admin Permisions</p>
-    <hr />
-    <div className="flex gap-3 items-center justify-end">
-     <button
-      onClick={onClose}
-      className="px-4 py-2 rounded-[8px] bg-amber-400 text-white cursor-pointer">
-      Cancel
-     </button>
-     <button className="px-4 py-2 rounded-[8px] bg-red-500 text-white cursor-pointer">
-      Delete
-     </button>
-    </div>
-   </div>
-  </div>
- );
-};
-
 const UserTable: React.FC = () => {
  const [users, setUsers] = useState<User[]>([]);
  const [loading, setLoading] = useState(true);
- const [onOpen, setOnOpen] = useState(false);
+ const [openUpdate, setOpenUpdate] = useState(false);
+ const [openDelete, setOpenDelete] = useState(false);
+
+ const toggleUpdate = () => {
+  setOpenUpdate(!openUpdate);
+ };
 
  const toggleDelete = () => {
-  setOnOpen(!onOpen);
+  setOpenDelete(!openDelete);
  };
 
  useEffect(() => {
@@ -82,15 +64,16 @@ const UserTable: React.FC = () => {
        <td className="border border-gray-200 p-2 text-center">{user.phone}</td>
        <td className="border border-gray-200 p-2 text-center">{user.role}</td>
        <td className="border flex gap-2 items-center justify-center border-gray-200 p-2">
-        <button className="py-2 px-4 bg-amber-300 rounded-[8px] cursor-pointer">
+        <button onClick={toggleUpdate} className="py-2 px-4 bg-amber-300 rounded-[8px] cursor-pointer">
          <FaRegEdit />
         </button>
+        {openUpdate && <UpdateUserModal onClose={toggleUpdate} />}
         <button
          onClick={toggleDelete}
          className="py-2 px-4 bg-red-600 rounded-[8px] cursor-pointer text-white">
          <IoMdTrash />
         </button>
-        {onOpen && <DeleteUser onClose={toggleDelete} />}
+        {openDelete && <DeleteUserModal onClose={toggleDelete} />}
        </td>
       </tr>
      ))}

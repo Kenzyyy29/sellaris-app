@@ -11,7 +11,6 @@ import {
 } from "firebase/firestore";
 import app from "./init";
 import bcrypt from "bcrypt";
-import { stat } from "fs";
 
 const firestore = getFirestore(app);
 
