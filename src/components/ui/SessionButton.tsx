@@ -1,14 +1,11 @@
 "use client";
 import {signIn, signOut, useSession} from "next-auth/react";
+import Link from "next/link";
 import {useState} from "react";
 import { CiLogout } from "react-icons/ci";
 
-interface SessionButtonProps {
- isOpen: boolean;
- onClose: () => void;
-}
 
-const SessionButton: React.FC<SessionButtonProps> = () => {
+const SessionButton = () => {
  const [isOpen, setIsOpen] = useState(false);
 
  const toggleOpen = () => {
@@ -29,7 +26,7 @@ const SessionButton: React.FC<SessionButtonProps> = () => {
       <div className="absolute bg-white shadow-lg mt-8 text-black w-48 right-10">
        <ul className="rounded-[8px]">
         <li className="px-4 py-2 hover:bg-gray-200">Item A</li>
-        <li className="px-4 py-2 hover:bg-gray-200">Item B</li>
+        <li className="px-4 py-2 hover:bg-gray-200"><Link href="/dashboard">Dashboard</Link></li>
         <button
          onClick={() => signOut()}
          className="w-full flex items-center justify-between px-4 py-2 hover:bg-gray-200">
