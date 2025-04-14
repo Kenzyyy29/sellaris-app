@@ -9,7 +9,7 @@ import {
     updateDoc,
     where,
 } from "firebase/firestore";
-import app from "./init";
+import {app} from "./init";
 import bcrypt from "bcrypt";
 
 const firestore = getFirestore(app);
@@ -55,7 +55,7 @@ export async function register(data: {
             message: "Email already exists"
         }
     } else {
-        data.role = "Member"
+        data.role = "member"
         data.password = await bcrypt.hash(data.password, 10)
         data.created_at = new Date()
         data.updated_at = new Date()
