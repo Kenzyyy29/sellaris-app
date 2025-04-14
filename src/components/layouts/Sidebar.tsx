@@ -18,6 +18,12 @@ const Library = {
  ],
 };
 
+
+const Products = {
+ title: "Product",
+ items: [{name: "Product Library", href: "/dashboard/products"}],
+};
+
 export default function Sidebar() {
  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
@@ -69,6 +75,28 @@ export default function Sidebar() {
      {openDropdown === "item2" && (
       <ul className="bg-black text-white">
        {Library.items.map((item, index) => (
+        <ul key={index}>
+         <Link href={item.href}>
+          <li className="lg:p-2 lg:px-5 2xl:p-3  2xl:px-6 cursor-pointer hover:bg-white/20">
+           {item.name}
+          </li>
+         </Link>
+        </ul>
+       ))}
+      </ul>
+     )}
+
+     <ul
+      className="hover:bg-primary hover:text-white lg:py-2 2xl:py-3 font-medium"
+      onClick={() => toggleDropdown("item3")}>
+      <div className="flex justify-between items-center">
+       {Products.title}
+       <FaCaretDown className="fill-primary" />
+      </div>
+     </ul>
+     {openDropdown === "item3" && (
+      <ul className="bg-black text-white">
+       {Products.items.map((item, index) => (
         <ul key={index}>
          <Link href={item.href}>
           <li className="lg:p-2 lg:px-5 2xl:p-3  2xl:px-6 cursor-pointer hover:bg-white/20">

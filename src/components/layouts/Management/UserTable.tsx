@@ -105,30 +105,44 @@ const UsersPage = () => {
 
  return (
   <div className="w-full">
-   <div className="overflow-x-auto">
-    <table className="min-w-full border-collapse border border-gray-200">
-     <thead>
-      <tr className="bg-gray-500 text-white">
-       <th className="py-2 px-4 border border-gray-200">#</th>
-       <th className="py-2 px-4 border border-gray-200 w-[250px]">Name</th>
-       <th className="py-2 px-4 border border-gray-200 w-[250px]">Email</th>
-       <th className="py-2 px-4 border border-gray-200">Phone</th>
-       <th className="py-2 px-4 border border-gray-200">Role</th>
-       <th className="py-2 px-4 border border-gray-200">Actions</th>
+   <div className="overflow-x-auto bg-white rounded-lg shadow ">
+    <table className="min-w-full divide-y divide-gray-200">
+     <thead className="bg-gray-50">
+      <tr>
+       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+        #
+       </th>
+       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[250px]">
+        Name
+       </th>
+       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[250px]">
+        Email
+       </th>
+       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+        Phone
+       </th>
+       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+        Role
+       </th>
+       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+        Actions
+       </th>
       </tr>
      </thead>
      <tbody>
       {users.map((user: User, index: number) => (
        <tr
         key={user.id}
-        className="hover:bg-gray-50 text-center">
-        <td className="py-2 px-4 border border-gray-200">{index + 1}</td>
-        <td className="py-2 px-4 border border-gray-200">{user.fullname}</td>
-        <td className="py-2 px-4 border border-gray-200">{user.email}</td>
-        <td className="py-2 px-4 border border-gray-200">{user.phone}</td>
-        <td className="py-2 px-4 border border-gray-200">{user.role}</td>
-        <td className="py-2 px-4 border border-gray-200">
-         <div className="flex gap-2 justify-center">
+        className="hover:bg-gray-50">
+        <td className="px-6 py-4 whitespace-nowrap font-medium text-gray-900">
+         {index + 1}
+        </td>
+        <td className="px-6 py-4 whitespace-nowrap font-medium text-gray-900">{user.fullname}</td>
+        <td className="px-6 py-4 whitespace-nowrap font-medium text-gray-900">{user.email}</td>
+        <td className="px-6 py-4 whitespace-nowrap font-medium text-gray-900">{user.phone}</td>
+        <td className="px-6 py-4 whitespace-nowrap font-medium text-gray-900">{user.role}</td>
+        <td className="px-6 py-4 whitespace-nowrap font-medium text-gray-900">
+         <div className="flex gap-2 ">
           <button
            onClick={() => handleEditClick(user)}
            className="bg-blue-500 text-white px-4 cursor-pointer py-2 rounded w-full flex items-center justify-center">
