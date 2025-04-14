@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { retrieveData} from "@/lib/firebase/service";
-import { doc, updateDoc } from "firebase/firestore";
+import { deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase/init";
 
 export async function GET() {
@@ -34,6 +34,42 @@ export async function PUT(request: Request) {
     console.error('Error updating user:', error);
     return NextResponse.json(
       { error: 'Failed to update user' },
+      { status: 500 }
+    );
+  }
+}
+
+export async function DELETE(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get('id');
+
+    if (!id) {
+      const body = await request.json();
+      const idFromBody = body.id;
+      if (!idFromBody) {
+        return NextResponse.json(
+          { error: 'User ID is required' },
+          { status: 400 }
+        );
+      }
+      await deleteDoc(doc(db, 'users', idFromBody));
+      return NextResponse.json(
+        { message: 'User deleted successfully' },
+        { status: 200 }
+      );
+    }
+
+    await deleteDoc(doc(db, 'users', id));
+
+    return NextResponse.json(
+      { message: 'User deleted successfully' },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    return NextResponse.json(
+      { error: 'Failed to delete user' },
       { status: 500 }
     );
   }

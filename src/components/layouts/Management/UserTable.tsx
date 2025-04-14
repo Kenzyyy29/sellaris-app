@@ -1,8 +1,6 @@
 "use client";
 
 import {useState} from "react";
-import {doc, updateDoc} from "firebase/firestore";
-import {db} from "@/lib/firebase/init";
 import {useUsers} from "@/hooks/useUsers";
 import DeleteUserModal from "./DeleteUserModal";
 import {IoMdTrash} from "react-icons/io";
@@ -41,9 +39,28 @@ const UsersPage = () => {
 
  const handleConfirmDelete = async () => {
   if (userToDelete) {
-   await deleteUser(userToDelete.id);
-   setIsDeleteModalOpen(false);
-   setUserToDelete(null);
+   try {
+    const response = await fetch("/api/user", {
+     method: "DELETE",
+     headers: {
+      "Content-Type": "application/json",
+     },
+     body: JSON.stringify({id: userToDelete.id}),
+    });
+
+    if (!response.ok) {
+     throw new Error("Failed to delete user");
+    }
+
+    setUser(users.filter((user) => user.id !== userToDelete.id));
+
+    setIsDeleteModalOpen(false);
+    setUserToDelete(null);
+    alert("User berhasil dihapus!");
+   } catch (error) {
+    console.error("Error deleting user:", error);
+    alert("Gagal menghapus user");
+   }
   }
  };
 
@@ -65,7 +82,6 @@ const UsersPage = () => {
         throw new Error('Failed to update user');
       }
 
-      // Refresh user data or update local state
       const updatedUser = { ...userToEdit, ...updatedData };
       setUser(users.map(user => (user.id === userToEdit.id ? updatedUser : user)));
 

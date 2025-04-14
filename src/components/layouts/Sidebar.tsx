@@ -4,10 +4,17 @@ import Link from "next/link";
 import {useState} from "react";
 import {FaCaretDown} from "react-icons/fa";
 
-const Links = {
+const Management = {
  title: "Management",
  items: [
   {name: "User Management", href: "/dashboard/management/user-management"},
+ ],
+};
+
+const Library = {
+ title: "Library",
+ items: [
+  {name: "Ingredients", href: "/dashboard/ingredients"},
  ],
 };
 
@@ -25,7 +32,7 @@ export default function Sidebar() {
     </Link>
 
     {/*nav*/}
-    <div className="flex flex-col gap-3 ">
+    <div className="flex flex-col gap-1 ">
      <Link href="/dashboard">
       <h1 className="">Dashboard</h1>
      </Link>
@@ -33,16 +40,38 @@ export default function Sidebar() {
       className="hover:bg-primary hover:text-white lg:py-2 2xl:py-3 font-medium"
       onClick={() => toggleDropdown("item1")}>
       <div className="flex justify-between items-center">
-       {Links.title}
+       {Management.title}
        <FaCaretDown className="fill-primary" />
       </div>
      </ul>
      {openDropdown === "item1" && (
-      <ul className="bg-[#f4f4f4] text-primary border-t border-b">
-       {Links.items.map((item, index) => (
+      <ul className="bg-black text-white">
+       {Management.items.map((item, index) => (
         <ul key={index}>
          <Link href={item.href}>
-          <li className="lg:p-2 lg:px-5 2xl:p-3  2xl:px-6 cursor-pointer text-black">
+          <li className="lg:p-2 lg:px-5 2xl:p-3 2xl:px-6 cursor-pointer hover:bg-white/20">
+           {item.name}
+          </li>
+         </Link>
+        </ul>
+       ))}
+      </ul>
+     )}
+
+     <ul
+      className="hover:bg-primary hover:text-white lg:py-2 2xl:py-3 font-medium"
+      onClick={() => toggleDropdown("item2")}>
+      <div className="flex justify-between items-center">
+       {Library.title}
+       <FaCaretDown className="fill-primary" />
+      </div>
+     </ul>
+     {openDropdown === "item2" && (
+      <ul className="bg-black text-white">
+       {Library.items.map((item, index) => (
+        <ul key={index}>
+         <Link href={item.href}>
+          <li className="lg:p-2 lg:px-5 2xl:p-3  2xl:px-6 cursor-pointer hover:bg-white/20">
            {item.name}
           </li>
          </Link>
