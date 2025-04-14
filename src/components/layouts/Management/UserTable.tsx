@@ -49,24 +49,34 @@ const UsersPage = () => {
 
  const handleSaveEdit = async (updatedData: Partial<User>) => {
   if (userToEdit) {
-   try {
-    const userRef = doc(db, "users", userToEdit.id);
-    await updateDoc(userRef, updatedData);
+    try {
+      const response = await fetch('/api/user', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: userToEdit.id,
+          ...updatedData,
+        }),
+      });
 
-    setUser(
-     users.map((user) =>
-      user.id === userToEdit.id ? {...user, ...updatedData} : user
-     )
-    );
+      if (!response.ok) {
+        throw new Error('Failed to update user');
+      }
 
-    setIsEditModalOpen(false);
-    alert("User berhasil diupdate!");
-   } catch (error) {
-    console.error("Error updating user:", error);
-    alert("Gagal mengupdate user");
-   }
+      // Refresh user data or update local state
+      const updatedUser = { ...userToEdit, ...updatedData };
+      setUser(users.map(user => (user.id === userToEdit.id ? updatedUser : user)));
+
+      setIsEditModalOpen(false);
+      alert('User berhasil diupdate!');
+    } catch (error) {
+      console.error('Error updating user:', error);
+      alert('Gagal mengupdate user');
+    }
   }
- };
+};
 
  const handleCancelDelete = () => {
   setIsDeleteModalOpen(false);
