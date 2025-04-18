@@ -74,7 +74,7 @@ const IngredientsPage = () => {
  if (loading) return <div>Loading...</div>;
 
  return (
-  <div className="ml-64">
+  <div>
    <div className="flex justify-between items-center mb-6">
     <h1 className="text-2xl font-bold">Bahan Baku</h1>
     <button

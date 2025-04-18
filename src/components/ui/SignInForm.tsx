@@ -3,7 +3,6 @@ import {signIn} from "next-auth/react";
 import Link from "next/link";
 import {useRouter} from "next/navigation";
 import {useState} from "react";
-import {FaGoogle} from "react-icons/fa";
 
 export default function SignInForm({
  searchParams,
@@ -67,7 +66,7 @@ export default function SignInForm({
     <button
      disabled={isLoading}
      type="submit"
-     className="w-full bg-[#337367] p-2 rounded text-white cursor-pointer hover:bg-[#395c55]">
+     className="w-full bg-primary p-2 rounded text-white cursor-pointer hover:bg-[#395c55]">
      {isLoading ? "Loading..." : "Login"}
     </button>
    </form>
