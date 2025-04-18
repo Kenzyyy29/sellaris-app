@@ -1,82 +1,72 @@
-import {useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 import {
- collection,
- getDocs,
- doc,
- deleteDoc,
- updateDoc,
+  collection,
+  getDocs,
+  doc,
+  deleteDoc,
+  updateDoc,
 } from "firebase/firestore";
-import {db} from "@/lib/firebase/init";
-import bcrypt from "bcryptjs";
+import { db } from "@/lib/firebase/init";
+import bcrypt from "bcrypt";
 
 interface User {
- id: string;
- fullname: string;
- email: string;
- phone: string;
- role: string;
- password?: string;
- created_at?: Date;
- updated_at?: Date;
+  id: string;
+  fullname: string;
+  email: string;
+  phone: string;
+  role: string;
+  password?: string;
+  created_at?: Date;
+  updated_at?: Date;
 }
 
 export const useUsers = () => {
- const [users, setUsers] = useState<User[]>([]);
- const [loading, setLoading] = useState(true);
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const fetchUsers = async () => {
-   try {
-    const querySnapshot = await getDocs(collection(db, "users"));
-    const usersData: User[] = [];
-    querySnapshot.forEach((doc) => {
-     usersData.push({id: doc.id, ...doc.data()} as User);
-    });
-    setUsers(usersData);
-    setLoading(false);
-   } catch (error) {
-    console.error("Error fetching users:", error);
-    setLoading(false);
-   }
+    try {
+      const querySnapshot = await getDocs(collection(db, "users"));
+      const usersData: User[] = [];
+      querySnapshot.forEach((doc) => {
+        usersData.push({ id: doc.id, ...doc.data() } as User);
+      });
+      setUsers(usersData);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      setLoading(false);
+    }
   };
 
- const deleteUser = async (userId: string) => {
-  try {
-   await deleteDoc(doc(db, "users", userId));
-   setUsers(users.filter((user) => user.id !== userId));
-   return true;
-  } catch (error) {
-   console.error("Error deleting user:", error);
-   return false;
-  }
- };
+  const deleteUser = async (userId: string) => {
+    try {
+      await deleteDoc(doc(db, "users", userId));
+      setUsers(users.filter((user) => user.id !== userId));
+      return true;
+    } catch (error) {
+      console.error("Error deleting user:", error);
+      return false;
+    }
+  };
 
- const updateUser = async (userId: string, data: Partial<User>) => {
-  try {
-   // Jika ada password, hash dulu
-   if (data.password) {
-    data.password = await bcrypt.hash(data.password, 10);
-   }
+  const updateUser = async (userId: string, data: Partial<User>): Promise<boolean> => {
+    try {
+      const userRef = doc(db, "users", userId);
+      await updateDoc(userRef, data);
+      setUsers(
+        users.map((user) => (user.id === userId ? { ...user, ...data } : user))
+      );
+      return true;
+    } catch (error) {
+      console.error("Error updating user:", error);
+      return false;
+    }
+  };
 
-   const userRef = doc(db, "users", userId);
-   await updateDoc(userRef, {
-    ...data,
-    updated_at: new Date(),
-   });
+  useEffect(() => {
+    fetchUsers();
+  }, []);
 
-   setUsers(
-    users.map((user) => (user.id === userId ? {...user, ...data} : user))
-   );
-
-   return true;
-  } catch (error) {
-   console.error("Error updating user:", error);
-   return false;
-  }
- };
-
- useEffect(() => {
-  fetchUsers();
- }, []);
-
- return {users, loading, deleteUser, updateUser, fetchUsers};
+  return { users, loading, deleteUser, updateUser, fetchUsers };
 };

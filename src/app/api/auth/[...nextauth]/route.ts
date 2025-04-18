@@ -4,12 +4,9 @@ import { NextAuthOptions } from "next-auth"
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
 
-// api/auth/[...nextauth]/route.ts
 const authOptions: NextAuthOptions = {
     session: {
         strategy: "jwt",
-        maxAge: 30 * 24 * 60 * 60, // 30 hari
-        updateAge: 24 * 60 * 60, // Update session setiap 24 jam
     },
     secret: process.env.NEXTAUTH_SECRET,
     providers: [
@@ -62,7 +59,6 @@ const authOptions: NextAuthOptions = {
             return session;
         },
         async redirect({ url, baseUrl }) {
-            // Handle redirect setelah sign in
             if (url.startsWith("/")) return `${baseUrl}${url}`;
             return url.startsWith(baseUrl) ? url : baseUrl;
         }
