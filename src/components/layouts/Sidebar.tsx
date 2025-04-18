@@ -1,118 +1,62 @@
 "use client";
-import {signOut} from "next-auth/react";
+import {signOut, useSession} from "next-auth/react";
 import Link from "next/link";
-import {useState} from "react";
-import {FaCaretDown} from "react-icons/fa";
+import {usePathname} from "next/navigation";
+import {FaCreditCard, FaUser} from "react-icons/fa";
+import {FaCartShopping} from "react-icons/fa6";
+import {GoGear} from "react-icons/go";
+import {MdDashboard} from "react-icons/md";
+import {RiCustomerService2Fill} from "react-icons/ri";
+import {TbReport} from "react-icons/tb";
 
-const Management = {
- title: "Management",
- items: [
-  {name: "User Management", href: "/dashboard/management/user-management"},
- ],
-};
-
-const Library = {
- title: "Library",
- items: [
-  {name: "Ingredients", href: "/dashboard/ingredients"},
- ],
-};
-
-
-const Products = {
- title: "Product",
- items: [{name: "Product Library", href: "/dashboard/products"}],
-};
+const links = [
+ {name: "Dashboard", path: "/dashboard", icon: <MdDashboard />},
+ {name: "Products", path: "/dashboard/products", icon: <FaCartShopping />},
+ {name: "Reports", path: "/dashboard/reports", icon: <TbReport />},
+ {
+  name: "Payment Methods",
+  path: "/dashboard/payment-methods",
+  icon: <FaCreditCard />,
+ },
+ {name: "Clients", path: "/dashboard/clients", icon: <FaUser />},
+ {
+  name: "Services",
+  path: "/dashboard/services",
+  icon: <RiCustomerService2Fill />,
+ },
+ {name: "Settings", path: "/dashboard/settings", icon: <GoGear />},
+];
 
 export default function Sidebar() {
- const [openDropdown, setOpenDropdown] = useState<string | null>(null);
-
- const toggleDropdown = (dropdown: string) => {
-  setOpenDropdown(openDropdown === dropdown ? null : dropdown);
- };
+ const pathname = usePathname();
+ const {data: session, status}: {data: any; status: string} = useSession();
  return (
-  <div className="fixed h-screen w-[250px] flex flex-col justify-between p-4 bg-black text-white">
-   <div className="flex flex-col gap-10">
+  <div className="fixed left-0 top-0 h-full max-w-[250px] w-full bg-white/40 p-5 flex flex-col justify-between items-center rounded-[8px] shadow-sm ">
+   <ul className="flex flex-col w-full items-center">
     <Link href="/">
-     <h1 className="text-2xl font-bold text-center">Admin</h1>
+     <h1 className="text-3xl italic font-bold text-[#337367]">Sellaris</h1>
     </Link>
-
-    {/*nav*/}
-    <div className="flex flex-col gap-1 ">
-     <Link href="/dashboard">
-      <h1 className="">Dashboard</h1>
-     </Link>
-     <ul
-      className="hover:bg-primary hover:text-white lg:py-2 2xl:py-3 font-medium"
-      onClick={() => toggleDropdown("item1")}>
-      <div className="flex justify-between items-center">
-       {Management.title}
-       <FaCaretDown className="fill-primary" />
-      </div>
-     </ul>
-     {openDropdown === "item1" && (
-      <ul className="bg-black text-white">
-       {Management.items.map((item, index) => (
-        <ul key={index}>
-         <Link href={item.href}>
-          <li className="lg:p-2 lg:px-5 2xl:p-3 2xl:px-6 cursor-pointer hover:bg-white/20">
-           {item.name}
-          </li>
-         </Link>
-        </ul>
-       ))}
-      </ul>
-     )}
-
-     <ul
-      className="hover:bg-primary hover:text-white lg:py-2 2xl:py-3 font-medium"
-      onClick={() => toggleDropdown("item2")}>
-      <div className="flex justify-between items-center">
-       {Library.title}
-       <FaCaretDown className="fill-primary" />
-      </div>
-     </ul>
-     {openDropdown === "item2" && (
-      <ul className="bg-black text-white">
-       {Library.items.map((item, index) => (
-        <ul key={index}>
-         <Link href={item.href}>
-          <li className="lg:p-2 lg:px-5 2xl:p-3  2xl:px-6 cursor-pointer hover:bg-white/20">
-           {item.name}
-          </li>
-         </Link>
-        </ul>
-       ))}
-      </ul>
-     )}
-
-     <ul
-      className="hover:bg-primary hover:text-white lg:py-2 2xl:py-3 font-medium"
-      onClick={() => toggleDropdown("item3")}>
-      <div className="flex justify-between items-center">
-       {Products.title}
-       <FaCaretDown className="fill-primary" />
-      </div>
-     </ul>
-     {openDropdown === "item3" && (
-      <ul className="bg-black text-white">
-       {Products.items.map((item, index) => (
-        <ul key={index}>
-         <Link href={item.href}>
-          <li className="lg:p-2 lg:px-5 2xl:p-3  2xl:px-6 cursor-pointer hover:bg-white/20">
-           {item.name}
-          </li>
-         </Link>
-        </ul>
-       ))}
-      </ul>
-     )}
-    </div>
-   </div>
+    <p className="text-lg font-semibold underline mt-5">
+     Hi, {session?.user?.fullname}
+    </p>
+    <ul className="flex flex-col gap-2 w-full mt-2">
+     {links.map((link, index) => (
+      <Link
+       href={link.path}
+       key={index}
+       className={`flex items-center gap-4 p-2 hover:bg-[#337367] hover:text-white rounded-[8px] w-full transition-all duration-500 ${
+        link.path === pathname && "bg-[#337367] text-white"
+       }`}>
+       <li className="text-xl">{link.icon}</li>
+       <p>{link.name}</p>
+      </Link>
+     ))}
+    </ul>
+   </ul>
    <button
     onClick={() => signOut()}
-    className="flex flex-col gap-5 hover:bg-white/90 cursor-pointer bg-white text-black px-4 py-2 rounded-[8px]">
-    Keluar
+    className="bg-[#337367] text-white w-full py-2 rounded-[8px] cursor-pointer">
+    Sign Out
    </button>
   </div>
  );

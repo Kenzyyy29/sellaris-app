@@ -4,7 +4,7 @@ import {useState} from "react";
 import {useUsers} from "@/hooks/useUsers";
 import DeleteUserModal from "./DeleteUserModal";
 import {IoMdTrash} from "react-icons/io";
-import {FaRegEdit} from "react-icons/fa";
+import {FaEye} from "react-icons/fa";
 import UpdateUserModal from "./UpdateUserModal";
 
 interface User {
@@ -137,16 +137,24 @@ const UsersPage = () => {
         <td className="px-6 py-4 whitespace-nowrap font-medium text-gray-900">
          {index + 1}
         </td>
-        <td className="px-6 py-4 whitespace-nowrap font-medium text-gray-900">{user.fullname}</td>
-        <td className="px-6 py-4 whitespace-nowrap font-medium text-gray-900">{user.email}</td>
-        <td className="px-6 py-4 whitespace-nowrap font-medium text-gray-900">{user.phone}</td>
-        <td className="px-6 py-4 whitespace-nowrap font-medium text-gray-900">{user.role}</td>
+        <td className="px-6 py-4 whitespace-nowrap font-medium text-gray-900">
+         {user.fullname}
+        </td>
+        <td className="px-6 py-4 whitespace-nowrap font-medium text-gray-900">
+         {user.email}
+        </td>
+        <td className="px-6 py-4 whitespace-nowrap font-medium text-gray-900">
+         {user.phone}
+        </td>
+        <td className="px-6 py-4 whitespace-nowrap font-medium text-gray-900">
+         {user.role}
+        </td>
         <td className="px-6 py-4 whitespace-nowrap font-medium text-gray-900">
          <div className="flex gap-2 ">
           <button
            onClick={() => handleEditClick(user)}
-           className="bg-blue-500 text-white px-4 cursor-pointer py-2 rounded w-full flex items-center justify-center">
-           <FaRegEdit />
+           className="bg-[#337367] text-white px-4 cursor-pointer py-2 rounded w-full flex items-center justify-center">
+           <FaEye />
           </button>
           <button
            onClick={() => handleDeleteClick(user.id, user.fullname)}

@@ -66,14 +66,13 @@ const UpdateUserModal = ({
       className="w-full border border-gray-400 text-gray-400 focus:outline-none rounded px-3 py-2"
      />
 
-     <select
+     <input
       name="role"
       value={formData.role}
       onChange={handleChange}
-      className="w-full border border-black text-black focus:outline-none rounded px-3 py-2">
-      <option value="member">member</option>
-      <option value="admin">admin</option>
-     </select>
+      disabled
+      className="w-full border border-gray-400 text-gray-400 focus:outline-none rounded px-3 py-2"
+     />
     </form>
     <hr />
     <div className="flex gap-3 items-center justify-end">
