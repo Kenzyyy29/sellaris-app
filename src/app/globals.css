@@ -5,6 +5,13 @@
   --foreground: #171717;
 }
 
+@theme {
+  --color-primary: rgb(53, 114, 102);
+  --color-tertiary: rgb(244, 244, 244);
+
+  --font-raleway: "Raleway", sans-serif;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

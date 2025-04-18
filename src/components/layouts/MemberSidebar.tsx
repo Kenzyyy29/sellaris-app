@@ -38,9 +38,9 @@ export default function MemberSidebar() {
   <div className="fixed left-0 top-0 h-full max-w-[250px] w-full bg-white/40 p-5 flex flex-col justify-between items-center rounded-[8px] shadow-sm ">
    <ul className="flex flex-col w-full items-center">
     <Link href="/">
-     <h1 className="text-3xl italic font-bold text-[#337367]">Sellaris</h1>
+     <h1 className="text-3xl italic font-bold text-primary">Sellaris</h1>
     </Link>
-    <p className="text-lg font-semibold text-center underline mt-5">
+    <p className="truncate text-lg font-semibold text-center underline mt-5">
      Hi, {session?.user?.fullname}
     </p>
     <ul className="flex flex-col gap-2 w-full mt-2">
@@ -48,8 +48,8 @@ export default function MemberSidebar() {
       <Link
        href={link.path}
        key={index}
-       className={`flex items-center gap-4 p-2 hover:bg-[#337367] hover:text-white rounded-[8px] w-full transition-all duration-500 ${
-        link.path === pathname && "bg-[#337367] text-white"
+       className={`flex items-center gap-4 p-2 hover:bg-primary hover:text-tertiary rounded-[8px] w-full transition-all duration-500 ${
+        link.path === pathname && "bg-[#337367] text-tertiary"
        }`}>
        <li className="text-xl">{link.icon}</li>
        <p>{link.name}</p>
@@ -59,7 +59,7 @@ export default function MemberSidebar() {
    </ul>
    <button
     onClick={() => signOut()}
-    className="bg-[#337367] text-white w-full py-2 rounded-[8px] cursor-pointer">
+    className="bg-[#337367] text-tertiary w-full py-2 rounded-[8px] cursor-pointer">
     Sign Out
    </button>
   </div>

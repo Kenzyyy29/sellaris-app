@@ -1,4 +1,4 @@
-import UserTable from "@/components/layouts/Management/UserTable";
+import UserTable from "@/components/layouts/Admin/Clients/UserTable";
 
 export default function ClientPage() {
  return (
