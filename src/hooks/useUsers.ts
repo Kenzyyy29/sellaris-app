@@ -7,6 +7,7 @@ import {
  updateDoc,
 } from "firebase/firestore";
 import {db} from "@/lib/firebase/init";
+import bcrypt from "bcryptjs";
 
 interface User {
  id: string;
@@ -14,26 +15,29 @@ interface User {
  email: string;
  phone: string;
  role: string;
+ password?: string;
+ created_at?: Date;
+ updated_at?: Date;
 }
 
 export const useUsers = () => {
  const [users, setUsers] = useState<User[]>([]);
  const [loading, setLoading] = useState(true);
 
- const fetchUsers = async () => {
-  try {
-   const querySnapshot = await getDocs(collection(db, "users"));
-   const usersData: User[] = [];
-   querySnapshot.forEach((doc) => {
-    usersData.push({id: doc.id, ...doc.data()} as User);
-   });
-   setUsers(usersData);
-   setLoading(false);
-  } catch (error) {
-   console.error("Error fetching users:", error);
-   setLoading(false);
-  }
- };
+  const fetchUsers = async () => {
+   try {
+    const querySnapshot = await getDocs(collection(db, "users"));
+    const usersData: User[] = [];
+    querySnapshot.forEach((doc) => {
+     usersData.push({id: doc.id, ...doc.data()} as User);
+    });
+    setUsers(usersData);
+    setLoading(false);
+   } catch (error) {
+    console.error("Error fetching users:", error);
+    setLoading(false);
+   }
+  };
 
  const deleteUser = async (userId: string) => {
   try {
@@ -48,11 +52,21 @@ export const useUsers = () => {
 
  const updateUser = async (userId: string, data: Partial<User>) => {
   try {
+   // Jika ada password, hash dulu
+   if (data.password) {
+    data.password = await bcrypt.hash(data.password, 10);
+   }
+
    const userRef = doc(db, "users", userId);
-   await updateDoc(userRef, data);
+   await updateDoc(userRef, {
+    ...data,
+    updated_at: new Date(),
+   });
+
    setUsers(
     users.map((user) => (user.id === userId ? {...user, ...data} : user))
    );
+
    return true;
   } catch (error) {
    console.error("Error updating user:", error);

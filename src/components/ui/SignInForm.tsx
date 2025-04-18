@@ -49,13 +49,15 @@ export default function SignInForm({
     onSubmit={(e) => handleLogin(e)}
     className="w-full flex flex-col items-center justify-center gap-4">
     <input
+     required
      placeholder="Email"
      type="email"
      name="email"
      id="email"
-     className="w-full border border-gray-400 text-gray-400 focus:ring focus:ring-blue-400 focus:text-black focus:outline-none p-2 rounded-[8px]"
+     className="w-full border border-gray-400 text-gray-400 focus:ring focus:ring-blue-400 focus:text-black focus:outline-none p-2 rounded-[8px] active:text-black"
     />
     <input
+     required
      placeholder="Password"
      type="password"
      name="password"

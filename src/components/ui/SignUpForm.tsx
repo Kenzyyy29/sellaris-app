@@ -47,6 +47,7 @@ export default function SignUpForm({
     className="w-full flex flex-col items-center justify-center gap-4">
     <input
      placeholder="Full Name"
+     required
      type="text"
      name="fullname"
      id="fullname"
@@ -54,6 +55,7 @@ export default function SignUpForm({
     />
     <input
      placeholder="Email"
+     required
      type="email"
      name="email"
      id="email"
@@ -61,6 +63,7 @@ export default function SignUpForm({
     />
     <input
      placeholder="Phone Number"
+     required
      type="text"
      name="phone"
      id="phone"
@@ -69,6 +72,7 @@ export default function SignUpForm({
 
     <input
      placeholder="Password"
+     required
      type="password"
      name="password"
      id="password"
