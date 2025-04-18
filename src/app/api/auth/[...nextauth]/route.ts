@@ -1,13 +1,16 @@
-import { login, loginWithGoogle } from "@/lib/firebase/service";
+import { login } from "@/lib/firebase/service";
 import { compare } from "bcrypt"
 import { NextAuthOptions } from "next-auth"
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 
+// api/auth/[...nextauth]/route.ts
 const authOptions: NextAuthOptions = {
     session: {
-        strategy: "jwt"
+        strategy: "jwt",
+        maxAge: 30 * 24 * 60 * 60, // 30 hari
+        updateAge: 24 * 60 * 60, // Update session setiap 24 jam
     },
     secret: process.env.NEXTAUTH_SECRET,
     providers: [
@@ -15,73 +18,74 @@ const authOptions: NextAuthOptions = {
             type: "credentials",
             name: "Credentials",
             credentials: {
-                email: { label: "Email", type: "email", placeholder: "Email" },
-                password: { label: "Password", type: "password", placeholder: "Password" }
+                email: { label: "Email", type: "email" },
+                password: { label: "Password", type: "password" }
             },
-
             async authorize(credentials) {
-                const { email, password } = credentials as { email: string, password: string }
-                const user: any = await login({ email })
-                if (user) {
-                    const passwordConfirm = await compare(password, user.password)
-                    if (passwordConfirm) {
-                        return user
-                    }
-                    return null
-                } else {
-                    return null
+                if (!credentials?.email || !credentials?.password) {
+                    throw new Error("Email dan password diperlukan");
                 }
+
+                const user: any = await login({ email: credentials.email });
+                if (!user) {
+                    throw new Error("User tidak ditemukan");
+                }
+
+                const passwordMatch = await compare(credentials.password, user.password);
+                if (!passwordMatch) {
+                    throw new Error("Password salah");
+                }
+
+                return {
+                    id: user.id,
+                    email: user.email,
+                    fullname: user.fullname,
+                    role: user.role
+                };
             }
         }),
-        GoogleProvider({
-            clientId: process.env.GOOGLE_CLIENT_ID as string,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET as string
-        })
-    ], callbacks: {
-        async jwt({ token, account, profile, user }: any) {
-            if (account?.provider === "credentials") {
-                token.email = user.email;
-                token.fullname = user.fullname;
+    ],
+    callbacks: {
+        async jwt({ token, user }: any) {
+            if (user) {
+                token.id = user.id;
                 token.role = user.role;
+                token.fullname = user.fullname;
             }
-            if (account?.provider === "google") {
-                const data = {
-                    email: profile?.email,
-                    fullname: profile?.name,
-                    role: "Member",
-                    type: "google"
-                }
-
-                await loginWithGoogle(data, (result: {status: boolean, data: any}) => {
-                    if (result.status) {
-                        token.email = result.data.email;
-                        token.fullname = result.data.fullname;
-                        token.role = result.data.role;
-                    }
-                })
-            }
-            return token
+            return token;
         },
-
         async session({ session, token }: any) {
-            if ("email" in token) {
-                session.user.email = token.email;
-            }
-            if ("fullname" in token) {
+            if (token) {
+                session.user.id = token.id;
+                session.user.role = token.role;
                 session.user.fullname = token.fullname;
             }
-            if ("role" in token) {
-                session.user.role = token.role;
-            }
-
-            return session
+            return session;
         },
-
+        async redirect({ url, baseUrl }) {
+            // Handle redirect setelah sign in
+            if (url.startsWith("/")) return `${baseUrl}${url}`;
+            return url.startsWith(baseUrl) ? url : baseUrl;
+        }
+    },
+    cookies: {
+        sessionToken: {
+            name: `next-auth.session-token`,
+            options: {
+                httpOnly: true,
+                sameSite: "lax",
+                path: "/",
+                secure: process.env.NODE_ENV === "production",
+                maxAge: 30 * 24 * 60 * 60, // 30 hari
+            },
+        },
     },
     pages: {
         signIn: "/sign-in",
-    }
-}
+        error: "/sign-in", // Halaman error untuk auth
+    },
+    debug: process.env.NODE_ENV === "development",
+};
 
 const handler = NextAuth(authOptions);
 

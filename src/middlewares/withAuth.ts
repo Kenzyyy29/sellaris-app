@@ -1,40 +1,57 @@
 import { getToken } from "next-auth/jwt";
 import { NextFetchEvent, NextMiddleware, NextRequest, NextResponse } from "next/server";
 
-const onlyAdminPage = "/dashboard";
-const authPage = ["/sign-in", "/sign-up"]
-
 export default function withAuth(
     middleware: NextMiddleware,
-    requireAuth: string[] = []) {
+    requireAuth: string[] = []
+) {
     return async (req: NextRequest, next: NextFetchEvent) => {
-        const pathname = req.nextUrl.pathname
+        const pathname = req.nextUrl.pathname;
+        const token = await getToken({
+            req,
+            secret: process.env.NEXTAUTH_SECRET,
+        });
 
+        if (pathname === "/admin") {
+            return NextResponse.redirect(new URL("/admin/dashboard", req.url));
+        }
 
-        if (requireAuth.includes(pathname) || pathname.startsWith(onlyAdminPage)) {
-            const token = await getToken({
-                req,
-                secret: process.env.NEXTAUTH_SECRET,
-            });
+        if (pathname === "/member") {
+            return NextResponse.redirect(new URL("/member/dashboard", req.url));
+        }
 
+        // Route yang memerlukan autentikasi
+        const isProtectedRoute = requireAuth.some(route =>
+            pathname.startsWith(route) ||
+            pathname === route.replace(/\/\*$/, '')
+        );
 
-            if (!token && !authPage.includes(pathname)) {
+        // Route auth pages
+        const isAuthPage = ["/sign-in", "/sign-up"].includes(pathname);
+
+        if (isProtectedRoute) {
+            if (!token) {
                 const url = new URL("/sign-in", req.url);
-                url.searchParams.set("callbackUrl", encodeURI(req.url));
+                url.searchParams.set("callbackUrl", encodeURI(pathname));
                 return NextResponse.redirect(url);
             }
 
+            // Validasi role untuk admin routes
+            if (pathname.startsWith("/admin") && token.role !== "admin") {
+                return NextResponse.redirect(new URL("/", req.url));
+            }
 
-            if (token) {
-                if (authPage.includes(pathname)) {
-                    return NextResponse.redirect(new URL("/", req.url))
-                }
-
-                if (pathname.startsWith(onlyAdminPage) && token.role !== "admin") {
-                    return NextResponse.redirect(new URL("/", req.url))
-                }
+            // Validasi role untuk member routes
+            if (pathname.startsWith("/member") && token.role !== "member") {
+                return NextResponse.redirect(new URL("/", req.url));
             }
         }
+
+        // Jika sudah login tapi mengakses halaman auth
+        if (isAuthPage && token) {
+            return NextResponse.redirect(new URL("/", req.url));
+        }
+
         return middleware(req, next);
-    }
+    };
 }

@@ -10,33 +10,37 @@ import {RiCustomerService2Fill} from "react-icons/ri";
 import {TbReport} from "react-icons/tb";
 
 const links = [
- {name: "Dashboard", path: "/dashboard", icon: <MdDashboard />},
- {name: "Products", path: "/dashboard/products", icon: <FaCartShopping />},
- {name: "Reports", path: "/dashboard/reports", icon: <TbReport />},
+ {name: "Dashboard", path: "/member/dashboard", icon: <MdDashboard />},
+ {
+  name: "Products",
+  path: "/member/products",
+  icon: <FaCartShopping />,
+ },
+ {name: "Reports", path: "/member/reports", icon: <TbReport />},
  {
   name: "Payment Methods",
-  path: "/dashboard/payment-methods",
+  path: "/member/payment-methods",
   icon: <FaCreditCard />,
  },
- {name: "Clients", path: "/dashboard/clients", icon: <FaUser />},
+ {name: "Clients", path: "/member/clients", icon: <FaUser />},
  {
   name: "Services",
-  path: "/dashboard/services",
+  path: "/member/services",
   icon: <RiCustomerService2Fill />,
  },
- {name: "Settings", path: "/dashboard/settings", icon: <GoGear />},
+ {name: "Settings", path: "/member/settings", icon: <GoGear />},
 ];
 
-export default function Sidebar() {
+export default function MemberSidebar() {
  const pathname = usePathname();
- const {data: session, status}: {data: any; status: string} = useSession();
+ const {data: session}: {data: any;} = useSession();
  return (
   <div className="fixed left-0 top-0 h-full max-w-[250px] w-full bg-white/40 p-5 flex flex-col justify-between items-center rounded-[8px] shadow-sm ">
    <ul className="flex flex-col w-full items-center">
     <Link href="/">
      <h1 className="text-3xl italic font-bold text-[#337367]">Sellaris</h1>
     </Link>
-    <p className="text-lg font-semibold underline mt-5">
+    <p className="text-lg font-semibold text-center underline mt-5">
      Hi, {session?.user?.fullname}
     </p>
     <ul className="flex flex-col gap-2 w-full mt-2">
