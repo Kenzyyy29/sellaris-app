@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import {useState, useEffect} from "react";
 import {useUsers} from "@/hooks/useUsers";
 
@@ -61,7 +61,7 @@ const AdminSettingsForm = ({admin, onUpdate}: AdminEditFormProps) => {
 
  return (
   <div className="bg-white p-6 rounded-lg shadow-md">
-   <h2 className="text-xl font-semibold mb-4">Edit Admin</h2>
+   <h2 className="text-xl font-semibold mb-4">Edit Admin Information</h2>
    {message.text && (
     <div
      className={`mb-4 p-2 rounded ${
@@ -100,9 +100,8 @@ const AdminSettingsForm = ({admin, onUpdate}: AdminEditFormProps) => {
       id="email"
       name="email"
       value={formData.email}
-      onChange={handleChange}
-      className="w-full px-3 py-2 border rounded-lg"
-      required
+      className="w-full px-3 py-2 border rounded-lg border-gray-400 text-gray-400"
+      disabled
      />
     </div>
     <div className="mb-4">

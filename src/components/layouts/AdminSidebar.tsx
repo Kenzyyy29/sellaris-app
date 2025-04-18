@@ -40,10 +40,7 @@ export default function AdminSidebar() {
     <Link href="/">
      <h1 className="text-3xl italic font-bold text-primary">Sellaris</h1>
     </Link>
-    <p className="text-lg font-semibold underline mt-5">
-     Hi, {session?.user?.fullname}
-    </p>
-    <ul className="flex flex-col gap-2 w-full mt-2">
+    <ul className="flex flex-col gap-2 w-full mt-14">
      {links.map((link, index) => (
       <Link
        href={link.path}

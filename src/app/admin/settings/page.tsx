@@ -25,8 +25,7 @@ export default function AdminSettingsPage() {
     setSelectedAdmin(adminUsers[0]);
    }
   }
- }, [users]); // Gunakan 'users' sebagai dependency
-
+ }, [users]);
  const handleAdminSelect = (admin: AdminUser) => {
   setSelectedAdmin(admin);
  };
@@ -40,9 +39,7 @@ export default function AdminSettingsPage() {
  }
 
  return (
-  <div className="p-4">
-   <h1 className="text-2xl font-bold mb-6">Admin Settings</h1>
-
+  <div>
    <div className="flex flex-col md:flex-row gap-6">
     <div className="w-full md:w-1/3">
      <div className="bg-white p-4 rounded-lg shadow-md">

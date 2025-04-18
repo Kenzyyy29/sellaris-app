@@ -46,7 +46,6 @@ const Inventory = {
 
 export default function MemberSidebar() {
  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
- const [closingDropdown, setClosingDropdown] = useState<string | null>(null);
 
  const toggleDropdown = (dropdown: string) => {
   setOpenDropdown(openDropdown === dropdown ? null : dropdown);
@@ -56,22 +55,21 @@ export default function MemberSidebar() {
   return pathname === itemPath;
  };
 
- const shouldAutoOpen = (items: {path: string}[]) => {
-  return items.some((item) => pathname === item.path);
- };
-
  const pathname = usePathname();
- const {data: session}: {data: any} = useSession();
  return (
   <div className="fixed left-0 top-0 h-full max-w-[250px] w-full bg-white/40 p-5 flex flex-col justify-between items-center rounded-[8px] shadow-sm ">
    <ul className="flex flex-col w-full items-center">
     <Link href="/">
      <h1 className="text-3xl italic font-bold text-primary">Sellaris</h1>
     </Link>
-    <p className="truncate text-lg font-semibold text-center max-w-[200px] underline mt-5">
-     Hi, {session?.user?.fullname}
-    </p>
 
+    <Link
+     href="/member/dashboard"
+     className={`${
+      isActive("/member/dashboard") ? "bg-primary text-tertiary" : ""
+     } p-2 w-full mt-2 hover:bg-primary hover:text-tertiary`}>
+     <h1 className="">Dashboard</h1>
+    </Link>
     {/* Library Dropdown */}
     <div className="w-full">
      <div
