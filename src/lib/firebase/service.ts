@@ -163,3 +163,69 @@ export async function updateAppProduct(
     return { status: false, statusCode: 500, message: "Failed to update package" };
   }
 }
+
+// /lib/firebase/service.ts
+export async function createUserSubscription(data: {
+  userId: string;
+  packageId: string;
+  packageName: string;
+  price: number;
+  duration: number;
+  startDate: Date;
+  endDate: Date;
+  status?: 'active' | 'expired' | 'canceled';
+  paymentStatus?: 'pending' | 'paid' | 'failed';
+}) {
+  try {
+    const subscriptionData = {
+      ...data,
+      status: data.status || 'active',
+      paymentStatus: data.paymentStatus || 'pending',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    const docRef = await addDoc(collection(firestore, "userSubscriptions"), subscriptionData);
+    return {
+      status: true,
+      statusCode: 200,
+      message: "Subscription created successfully",
+      id: docRef.id,
+    };
+  } catch (error) {
+    return { status: false, statusCode: 500, message: "Failed to create subscription" };
+  }
+}
+
+export async function getUserSubscriptions(userId: string) {
+ const q = query(
+  collection(firestore, "userSubscriptions"),
+  where("userId", "==", userId)
+ );
+ const snapshot = await getDocs(q);
+ const data = snapshot.docs.map((doc) => ({
+  id: doc.id,
+  ...doc.data(),
+ }));
+ return data;
+}
+
+export async function cancelUserSubscription(subscriptionId: string) {
+ try {
+  await updateDoc(doc(firestore, "userSubscriptions", subscriptionId), {
+   status: "canceled",
+   updatedAt: new Date(),
+  });
+  return {
+   status: true,
+   statusCode: 200,
+   message: "Subscription canceled successfully",
+  };
+ } catch (error) {
+  return {
+   status: false,
+   statusCode: 500,
+   message: "Failed to cancel subscription",
+  };
+ }
+}

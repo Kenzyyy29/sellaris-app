@@ -51,13 +51,13 @@ export default function PackagesPage() {
   return packageStyles.default;
  };
 
- const handleSelectPackage = (packageId: string) => {
-  if (!session) {
-   router.push("/sign-up");
-   return;
-  }
-  setSelectedPackage(packageId);
- };
+const handleSelectPackage = (packageId: string) => {
+ if (!session) {
+  router.push("/auth/login?callbackUrl=/packages");
+  return;
+ }
+ router.push(`/products/checkout?packageId=${packageId}`);
+};
 
  if (loading) {
   return <div className="p-6 text-center">Loading packages...</div>;

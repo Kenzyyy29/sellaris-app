@@ -11,14 +11,18 @@ export interface SubscriptionPackage {
   updated_at?: Date;
 }
 
+// /types/subscription.ts
 export interface UserSubscription {
- userId: string;
- packageId: string;
- startDate: Date;
- endDate: Date;
- isActive: boolean;
- paymentStatus: "pending" | "paid" | "failed" | "refunded";
- salesPercentage: number;
- createdAt: Date;
- updatedAt: Date;
+  id?: string;
+  userId: string;
+  packageId: string;
+  packageName: string;
+  startDate: Date;
+  endDate: Date;
+  price: number;
+  duration: number; // in months
+  status: 'active' | 'expired' | 'canceled';
+  paymentStatus: 'pending' | 'paid' | 'failed';
+  createdAt?: Date;
+  updatedAt?: Date;
 }
