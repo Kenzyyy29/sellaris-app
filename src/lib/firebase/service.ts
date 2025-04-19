@@ -30,11 +30,16 @@ export async function retrieveDataById(collectionName: string, id: string) {
     return data
 }
 
+// /lib/firebase/service.ts
 export async function register(data: {
     fullname: string;
     email: string;
     phone: string;
     password: string;
+    companyAddress?: string;
+    companyType?: string;
+    monthlyRevenue?: string;
+    agreeToTerms?: boolean;
     role?: string;
     created_at?: Date;
     updated_at?: Date;
@@ -45,9 +50,10 @@ export async function register(data: {
     );
     const snapshot = await getDocs(q);
     const users = snapshot.docs.map((doc) => ({
-        id: doc.data,
+        id: doc.id,
         ...doc.data(),
     }));
+    
     if (users.length > 0) {
         return {
             status: false,

@@ -54,7 +54,7 @@ export default function SignInForm({
      type="email"
      name="email"
      id="email"
-     className="w-full border border-gray-400 text-gray-400 focus:ring focus:ring-blue-400 focus:text-black focus:outline-none p-2 rounded-[8px] active:text-black"
+     className="w-full border border-gray-400 text-gray-400 focus:ring focus:ring-blue-400 focus:text-black focus:outline-none p-2 rounded-[8px]"
     />
     <input
      required
