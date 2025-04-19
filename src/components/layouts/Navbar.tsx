@@ -16,7 +16,7 @@ const Navbar = () => {
       <Link href="/about-us">About</Link>
      </li>
      <li>
-      <Link href="/product">Product</Link>
+      <Link href="/products">Product</Link>
      </li>
     </ul>
     <ul className="max-w-[200px] w-full flex justify-center">
